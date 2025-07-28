@@ -1,25 +1,22 @@
+
 body {
     background-color: #f8f9fa;
-    display: flex;
-    flex-direction: column;
-    min-height: 100vh;
 }
 
-main {
-    flex: 1;
+.kpi-card {
+    transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
 }
 
-.card {
-    border: none;
-    border-radius: 0.5rem;
+.kpi-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15) !important;
 }
 
-.navbar .nav-link.active {
-    font-weight: bold;
+.table-hover tbody tr:hover {
+    background-color: #f1f1f1;
 }
 
-.card-header {
-    background-color: #e9ecef;
-    border-bottom: 1px solid #dee2e6;
-    font-weight: 500;
+.badge {
+    font-size: 0.8rem;
+    padding: 0.4em 0.7em;
 }

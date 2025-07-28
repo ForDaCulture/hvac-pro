@@ -9,10 +9,16 @@ class Config:
     FLASK_ENV = os.environ.get('FLASK_ENV', 'production')
     DEBUG = FLASK_ENV == 'development'
 
-    # Database: Use PostgreSQL in production, fall back to SQLite for development
-    DATABASE_URL = os.environ.get('DATABASE_URL') or 'sqlite:///hvac_business.db'
-    if DATABASE_URL and DATABASE_URL.startswith("postgres://"):
-        DATABASE_URL = DATABASE_URL.replace("postgres://", "postgresql://", 1)
+    # --- THIS IS THE CORRECTED LINE ---
+    # Use PostgreSQL in production, fall back to SQLite for development
+    SQLALCHEMY_DATABASE_URI = os.environ.get('DATABASE_URL') or 'sqlite:///hvac_business.db'
+    
+    # Optional: silence a deprecation warning
+    SQLALCHEMY_TRACK_MODIFICATIONS = False
+    
+    # Fix for Heroku's old "postgres://" prefix
+    if SQLALCHEMY_DATABASE_URI and SQLALCHEMY_DATABASE_URI.startswith("postgres://"):
+        SQLALCHEMY_DATABASE_URI = SQLALCHEMY_DATABASE_URI.replace("postgres://", "postgresql://", 1)
 
     # API Keys
     TWILIO_ACCOUNT_SID = os.environ.get('TWILIO_ACCOUNT_SID')
