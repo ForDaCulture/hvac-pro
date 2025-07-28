@@ -1,4 +1,11 @@
+import os
 
+# Define the root directory of your project
+root_dir = r'C:\Users\jcoul\Dev\ACTIVE\hvac-pro'
+
+# --- The Complete and Correct models/database.py ---
+# This version includes CREATE TABLE statements for ALL tables.
+database_py_content = '''
 import sqlite3
 import os
 
@@ -123,3 +130,18 @@ def insert_sample_data(cursor):
         ('Lisa Chen', '555-0202', 'lisa@hvacpro.com', '["commercial"]', '{}', 40.00)
     ]
     cursor.executemany("INSERT INTO technicians (name, phone, email, skills, availability, hourly_rate) VALUES (?, ?, ?, ?, ?, ?)", technicians)
+'''
+
+# --- Script to write the updated file ---
+def write_file(path, content):
+    os.makedirs(os.path.dirname(path), exist_ok=True)
+    with open(path, 'w', encoding='utf-8') as f:
+        f.write(content)
+        print(f"✅ Updated file: {path}")
+
+try:
+    full_path = os.path.join(root_dir, 'models/database.py')
+    write_file(full_path, database_py_content)
+    print("\n🎉 Corrected and completed the database initialization script.")
+except Exception as e:
+    print(f"❌ An error occurred: {e}")

@@ -1,4 +1,38 @@
+import os
 
+# Define the root directory of your project
+root_dir = r'C:\Users\jcoul\Dev\ACTIVE\hvac-pro'
+
+# --- 1. Updated main.py ---
+# Ensures the schedule route provides all necessary data to the template.
+main_py_content = '''
+from flask import (
+    Blueprint, render_template, redirect, url_for, request, jsonify, flash
+)
+from flask_login import login_required, current_user
+from datetime import datetime
+from models.scheduler import HVACScheduler
+from services.data_analyzer import CustomerDataAnalyzer
+
+main = Blueprint('main', __name__)
+
+# ... (index, dashboard, and other routes remain the same) ...
+
+@main.route('/schedule')
+@login_required
+def schedule():
+    """Renders the scheduling page with necessary data for the form."""
+    scheduler = HVACScheduler()
+    customers = scheduler.get_all_customers()
+    technicians = scheduler.get_all_technicians()
+    return render_template('schedule.html', customers=customers, technicians=technicians)
+
+# ... (rest of the routes and API endpoints) ...
+'''
+
+# --- 2. Overhauled templates/schedule.html ---
+# This is a complete redesign of the scheduling page for a better UX.
+schedule_html_content = '''
 {% extends "base.html" %}
 {% block title %}Schedule a Job{% endblock %}
 {% block content %}
@@ -99,3 +133,27 @@
     });
 </script>
 {% endblock %}
+'''
+
+# --- Script to write the updated files ---
+def write_file(path, content):
+    os.makedirs(os.path.dirname(path), exist_ok=True)
+    with open(path, 'w', encoding='utf-8') as f:
+        f.write(content)
+        print(f"✅ Wrote/Updated file: {path}")
+
+try:
+    files_to_update = {
+        'main.py': main_py_content,
+        'templates/schedule.html': schedule_html_content,
+    }
+
+    for file_path, content in files_to_update.items():
+        full_path = os.path.join(root_dir, file_path)
+        write_file(full_path, content)
+
+    print("\n🎉 Schedule page has been fully implemented!")
+    print("Restart your Flask server and refresh the Schedule page to see the changes.")
+
+except Exception as e:
+    print(f"❌ An error occurred: {e}")

@@ -1,0 +1,16 @@
+
+body {
+    padding-top: 56px; /* Offset for fixed navbar */
+}
+.hero-section {
+    background: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)), url('https://placehold.co/1920x1080/2c3e50/ffffff?text=HVAC+System');
+    background-size: cover;
+    background-position: center;
+    padding: 8rem 0;
+}
+.feature-item i {
+    transition: transform 0.2s ease-in-out;
+}
+.feature-item:hover i {
+    transform: scale(1.2);
+}

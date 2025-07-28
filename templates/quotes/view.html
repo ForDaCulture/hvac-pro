@@ -1,0 +1,56 @@
+
+{% extends "base.html" %}
+{% block title %}Quote #{{ quote.id }}{% endblock %}
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h1 class="h2">Quote #{{ quote.id }} for {{ quote.customer_name }}</h1>
+    <div>
+        {% if quote.status == 'draft' or quote.status == 'sent' %}
+        <form action="{{ url_for('quotes.convert_to_job', quote_id=quote.id) }}" method="POST" class="d-inline">
+            <button type="submit" class="btn btn-success">
+                <i class="fas fa-check me-2"></i>Convert to Job
+            </button>
+        </form>
+        {% endif %}
+    </div>
+</div>
+
+<div class="card shadow-sm">
+    <div class="card-header">
+        <strong>Status:</strong> <span class="badge bg-info">{{ quote.status | title }}</span>
+        <strong class="ms-4">Date:</strong> {{ quote.created_at[:10] }}
+    </div>
+    <div class="card-body">
+        <h5 class="card-title">Customer Details</h5>
+        <p>{{ quote.customer_name }}<br>{{ quote.customer_address }}</p>
+        <hr>
+        <h5 class="card-title">Line Items</h5>
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Description</th>
+                    <th class="text-end">Quantity</th>
+                    <th class="text-end">Unit Price</th>
+                    <th class="text-end">Total</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for item in line_items %}
+                <tr>
+                    <td>{{ item.description }}</td>
+                    <td class="text-end">{{ item.quantity }}</td>
+                    <td class="text-end">${{ "%.2f"|format(item.unit_price) }}</td>
+                    <td class="text-end">${{ "%.2f"|format(item.quantity * item.unit_price) }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+            <tfoot>
+                <tr class="fw-bold">
+                    <td colspan="3" class="text-end">Grand Total:</td>
+                    <td class="text-end">${{ "%.2f"|format(quote.total_amount) }}</td>
+                </tr>
+            </tfoot>
+        </table>
+    </div>
+</div>
+{% endblock %}

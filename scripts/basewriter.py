@@ -1,3 +1,10 @@
+import os
+
+# Define the root directory of your project
+root_dir = r'C:\Users\jcoul\Dev\ACTIVE\hvac-pro'
+
+# --- Corrected templates/base.html with proper Jinja2 syntax ---
+base_html_content = '''
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -6,7 +13,6 @@
     <title>{% block title %}HVAC Pro{% endblock %}</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
-    <!-- THIS IS THE CORRECTED LINE -->
     <link href="{{ url_for('static', filename='css/custom.css') }}" rel="stylesheet">
 </head>
 <body>
@@ -19,6 +25,7 @@
                 </a>
             </div>
             <ul class="sidebar-nav">
+                {# --- THIS IS THE CORRECTED SYNTAX --- #}
                 <li class="sidebar-item {{ 'active' if 'dashboard' in request.endpoint else '' }}">
                     <a href="{{ url_for('main.dashboard') }}" class="sidebar-link">
                         <i class="fas fa-tachometer-alt"></i><span>Dashboard</span>
@@ -29,16 +36,7 @@
                         <i class="fas fa-calendar-alt"></i><span>Schedule</span>
                     </a>
                 </li>
-                <li class="sidebar-item {{ 'active' if 'inventory' in request.endpoint else '' }}">
-                    <a href="{{ url_for('inventory.list_parts') }}" class="sidebar-link">
-                        <i class="fas fa-box-open"></i><span>Inventory</span>
-                    </a>
-                </li>
-                <li class="sidebar-item {{ 'active' if 'quotes' in request.endpoint else '' }}">
-                    <a href="{{ url_for('quotes.list_quotes') }}" class="sidebar-link">
-                        <i class="fas fa-file-invoice-dollar"></i><span>Quotes</span>
-                    </a>
-                </li>
+                <!-- Add other links for Customers, Reports etc. here -->
             </ul>
         </nav>
 
@@ -77,3 +75,19 @@
     {% block scripts %}{% endblock %}
 </body>
 </html>
+'''
+
+# --- Script to write the updated file ---
+def write_file(path, content):
+    os.makedirs(os.path.dirname(path), exist_ok=True)
+    with open(path, 'w', encoding='utf-8') as f:
+        f.write(content)
+        print(f"✅ Updated file: {path}")
+
+try:
+    full_path = os.path.join(root_dir, 'templates/base.html')
+    write_file(full_path, base_html_content)
+    print("\n🎉 Corrected Jinja2 syntax in base.html.")
+    print("Restart your Flask server to see the changes.")
+except Exception as e:
+    print(f"❌ An error occurred: {e}")

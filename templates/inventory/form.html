@@ -1,0 +1,37 @@
+
+{% extends "base.html" %}
+{% block title %}{{ title }}{% endblock %}
+{% block content %}
+<h1 class="h2 mb-4">{{ title }}</h1>
+<div class="card shadow-sm">
+    <div class="card-body p-4">
+        <form method="POST" action="{{ action_url }}">
+            <div class="row g-3">
+                <div class="col-md-6">
+                    <label for="name" class="form-label">Part Name</label>
+                    <input type="text" class="form-control" id="name" name="name" value="{{ part.name or '' }}" required>
+                </div>
+                <div class="col-md-6">
+                    <label for="sku" class="form-label">SKU (Part Number)</label>
+                    <input type="text" class="form-control" id="sku" name="sku" value="{{ part.sku or '' }}">
+                </div>
+                <div class="col-md-4">
+                    <label for="quantity" class="form-label">Quantity On Hand</label>
+                    <input type="number" class="form-control" id="quantity" name="quantity" value="{{ part.quantity_on_hand if part else 0 }}" required>
+                </div>
+                <div class="col-md-4">
+                    <label for="cost_price" class="form-label">Cost Price ($)</label>
+                    <input type="number" step="0.01" class="form-control" id="cost_price" name="cost_price" value="{{ part.cost_price or '' }}">
+                </div>
+                <div class="col-md-4">
+                    <label for="sale_price" class="form-label">Sale Price ($)</label>
+                    <input type="number" step="0.01" class="form-control" id="sale_price" name="sale_price" value="{{ part.sale_price or '' }}">
+                </div>
+            </div>
+            <hr class="my-4">
+            <button type="submit" class="btn btn-primary">Save Part</button>
+            <a href="{{ url_for('inventory.list_parts') }}" class="btn btn-secondary">Cancel</a>
+        </form>
+    </div>
+</div>
+{% endblock %}

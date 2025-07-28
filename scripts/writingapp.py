@@ -1,4 +1,12 @@
 import os
+
+# Define the root directory of your project
+root_dir = r'C:\Users\jcoul\Dev\ACTIVE\hvac-pro'
+
+# --- The Final, Complete app.py ---
+# This version imports and registers all blueprints: auth, main, inventory, and quotes.
+app_py_content = '''
+import os
 import logging
 from logging.handlers import RotatingFileHandler
 from flask import Flask
@@ -66,3 +74,19 @@ def create_app(config_class=Config):
         app.logger.info('HVAC Pro startup')
 
     return app
+'''
+
+# --- Script to write the updated file ---
+def write_file(path, content):
+    os.makedirs(os.path.dirname(path), exist_ok=True)
+    with open(path, 'w', encoding='utf-8') as f:
+        f.write(content)
+        print(f"✅ Updated file: {path}")
+
+try:
+    full_path = os.path.join(root_dir, 'app.py')
+    write_file(full_path, app_py_content)
+    print("\n🎉 Your app.py file has been synchronized with all features.")
+    print("Please restart your server one last time with 'python run.py'.")
+except Exception as e:
+    print(f"❌ An error occurred: {e}")

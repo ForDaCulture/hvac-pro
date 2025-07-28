@@ -1,22 +1,150 @@
 
+/* Light Mode Variables (Default) */
+:root {
+    --bg-color: #f8f9fa;
+    --text-color: #212529;
+    --card-bg: #ffffff;
+    --sidebar-bg: #2c3e50;
+    --sidebar-text: #ecf0f1;
+    --sidebar-link-hover: #34495e;
+}
+
+/* Dark Mode Variables */
+.dark-mode {
+    --bg-color: #121212;
+    --text-color: #e0e0e0;
+    --card-bg: #1e1e1e;
+    --sidebar-bg: #1e1e1e;
+    --sidebar-text: #e0e0e0;
+    --sidebar-link-hover: #333333;
+}
+
 body {
-    background-color: #f8f9fa;
+    background-color: var(--bg-color);
+    color: var(--text-color);
+    transition: background-color 0.3s, color 0.3s;
 }
 
-.kpi-card {
-    transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+.card {
+    background-color: var(--card-bg);
+    border: 1px solid rgba(0,0,0,0.1);
+}
+.dark-mode .card {
+    border: 1px solid rgba(255,255,255,0.1);
 }
 
-.kpi-card:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15) !important;
+/* App Layout */
+.app-container {
+    display: flex;
+    min-height: 100vh;
 }
 
-.table-hover tbody tr:hover {
-    background-color: #f1f1f1;
+/* Sidebar */
+.sidebar {
+    width: 250px;
+    background-color: var(--sidebar-bg);
+    color: var(--sidebar-text);
+    transition: margin-left 0.3s;
+}
+.sidebar-header {
+    padding: 1.25rem;
+    text-align: center;
+}
+.sidebar-brand {
+    color: var(--sidebar-text);
+    text-decoration: none;
+    font-size: 1.5rem;
+    font-weight: bold;
+}
+.sidebar-nav {
+    list-style: none;
+    padding-left: 0;
+}
+.sidebar-link {
+    display: block;
+    padding: 1rem 1.5rem;
+    color: var(--sidebar-text);
+    text-decoration: none;
+    transition: background-color 0.2s;
+}
+.sidebar-link i {
+    margin-right: 1rem;
+    width: 20px;
+    text-align: center;
+}
+.sidebar-link:hover, .sidebar-item.active .sidebar-link {
+    background-color: var(--sidebar-link-hover);
 }
 
-.badge {
-    font-size: 0.8rem;
-    padding: 0.4em 0.7em;
+/* Main Content */
+.main-content {
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+}
+.main-header {
+    padding: 1rem 1.5rem;
+    background-color: var(--card-bg);
+    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+    display: flex;
+    align-items: center;
+}
+.content-body {
+    padding: 1.5rem;
+    flex-grow: 1;
+}
+
+/* Responsive (Mobile) Styles */
+@media (max-width: 768px) {
+    .sidebar {
+        margin-left: -250px;
+        position: fixed;
+        height: 100%;
+        z-index: 1000;
+    }
+    .sidebar.active {
+        margin-left: 0;
+    }
+    .main-header {
+        width: 100%;
+    }
+}
+
+/* ... (existing styles for dark mode, sidebar, etc.) ... */
+
+/* --- Mobile Responsiveness --- */
+@media (max-width: 768px) {
+    .sidebar {
+        margin-left: -250px; /* Hide sidebar by default on mobile */
+        position: fixed;
+        height: 100%;
+        z-index: 1000;
+    }
+    .sidebar.active {
+        margin-left: 0; /* Show sidebar when active */
+    }
+    .main-header {
+        width: 100%;
+    }
+    .kpi-card .display-4 {
+        font-size: 2.5rem; /* Make KPI numbers smaller on mobile */
+    }
+    .content-body {
+        padding: 1rem; /* Reduce padding on mobile */
+    }
+    .d-md-none {
+        display: block !important; /* Ensure hamburger menu button shows */
+    }
+}
+
+/* --- Technician Mobile View Specifics --- */
+.technician-view .job-card {
+    border: 1px solid #dee2e6;
+    border-radius: .5rem;
+    padding: 1rem;
+    margin-bottom: 1rem;
+}
+.technician-view .job-actions a {
+    display: block;
+    margin-bottom: .5rem;
 }

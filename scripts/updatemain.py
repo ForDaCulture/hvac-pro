@@ -1,4 +1,10 @@
+import os
 
+# Define the root directory of your project
+root_dir = r'C:\Users\jcoul\Dev\ACTIVE\hvac-pro'
+
+# --- Corrected main.py with the dashboard route restored ---
+main_py_content = '''
 from flask import (
     Blueprint, render_template, redirect, url_for, request, jsonify, flash
 )
@@ -73,3 +79,20 @@ def schedule_job():
             return jsonify({'success': False, 'error': 'No available slots found.'}), 400
     except Exception as e:
         return jsonify({'success': False, 'error': str(e)}), 500
+'''
+
+# --- Script to write the updated file ---
+def write_file(path, content):
+    os.makedirs(os.path.dirname(path), exist_ok=True)
+    with open(path, 'w', encoding='utf-8') as f:
+        f.write(content)
+        print(f"✅ Updated file: {path}")
+
+try:
+    full_path = os.path.join(root_dir, 'main.py')
+    write_file(full_path, main_py_content)
+    print("\n🎉 The 'dashboard' route has been restored in main.py.")
+    print("Your server should restart automatically. Please refresh your browser.")
+
+except Exception as e:
+    print(f"❌ An error occurred: {e}")
