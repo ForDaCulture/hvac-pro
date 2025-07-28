@@ -1,0 +1,94 @@
+{% extends "base.html" %}
+
+{% block title %}Schedule a Job - HVAC Pro{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-12">
+        <h1 class="display-6"><i class="fas fa-calendar-alt"></i> Schedule New Job</h1>
+        <p class="lead">Fill out the form below to automatically find the best slot for a new job.</p>
+    </div>
+</div>
+
+<div class="card shadow-lg mt-4">
+    <div class="card-body p-5">
+        <form id="schedule-job-form" action="{{ url_for('schedule_job') }}" method="POST">
+            <div class="row g-3">
+                <div class="col-md-6">
+                    <label for="customer_id" class="form-label">Customer</label>
+                    <select class="form-select" id="customer_id" name="customer_id" required>
+                        <option value="" disabled selected>Select a customer...</option>
+                        {% for customer in customers %}
+                            <option value="{{ customer.id }}">{{ customer.name }} - {{ customer.address }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+
+                <div class="col-md-6">
+                    <label for="job_type" class="form-label">Job Type</label>
+                    <select class="form-select" id="job_type" name="job_type" required>
+                        <option value="maintenance">Maintenance</option>
+                        <option value="repair">Repair</option>
+                        <option value="installation">Installation</option>
+                        <option value="electrical">Electrical</option>
+                    </select>
+                </div>
+                
+                <div class="col-md-6">
+                    <label for="preferred_date" class="form-label">Preferred Date (Optional)</label>
+                    <input type="date" class="form-control" id="preferred_date" name="preferred_date">
+                </div>
+
+                <div class="col-md-6">
+                    <label for="priority" class="form-label">Priority</label>
+                    <select class="form-select" id="priority" name="priority">
+                        <option value="5">Low</option>
+                        <option value="3" selected>Normal</option>
+                        <option value="1">High (Emergency)</option>
+                    </select>
+                </div>
+
+                <div class="col-12">
+                    <label for="notes" class="form-label">Notes</label>
+                    <textarea class="form-control" id="notes" name="notes" rows="3" placeholder="e.g., A/C unit making rattling noise, located in basement..."></textarea>
+                </div>
+            </div>
+
+            <div class="d-grid gap-2 mt-4">
+                <button type="submit" class="btn btn-primary btn-lg">
+                    <i class="fas fa-magic"></i> Find Slot & Schedule
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+document.getElementById('schedule-job-form').addEventListener('submit', async function(event) {
+    event.preventDefault();
+    const form = event.target;
+    const formData = new FormData(form);
+    const data = Object.fromEntries(formData.entries());
+
+    const response = await fetch(form.action, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(data),
+    });
+
+    const result = await response.json();
+
+    if (result.success) {
+        // A real app would show a success modal and then redirect
+        alert('Job scheduled successfully! Redirecting to dashboard.');
+        window.location.href = "{{ url_for('dashboard') }}";
+    } else {
+        alert('Error: ' + result.error);
+    }
+});
+</script>
+{% endblock %}

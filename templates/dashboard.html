@@ -1,0 +1,85 @@
+{% extends "base.html" %}
+{% block title %}Dashboard - HVAC Pro{% endblock %}
+{% block content %}
+<div class="row mb-4">
+    </div>
+<div class="card shadow">
+    <div class="card-header"><h4 class="mb-0">Job Details</h4></div>
+    <div class="card-body">
+        <div class="table-responsive">
+            <table class="table table-hover align-middle">
+                <thead>
+                    <tr>
+                        <th>Time</th><th>Customer</th><th>Address</th>
+                        <th>Job Type</th><th>Technician</th><th>Status</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for job in jobs %}
+                    <tr id="job-row-{{ job.id }}">
+                        <td>{{ job.scheduled_time }}</td>
+                        <td>{{ job.customer_name }}</td>
+                        <td>{{ job.address }}</td>
+                        <td>{{ job.job_type | title }}</td>
+                        <td><span class="badge bg-secondary">{{ job.technician_name }}</span></td>
+                        <td>
+                            <span class="badge bg-{{ {'completed':'success', 'in_progress':'info'}.get(job.status, 'warning') }}">
+                                {{ job.status | replace('_', ' ') | title }}
+                            </span>
+                        </td>
+                        <td>
+                            <div class="dropdown">
+                                <button class="btn btn-sm btn-outline-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown">
+                                    Actions
+                                </button>
+                                <ul class="dropdown-menu">
+                                    <li><a class="dropdown-item" href="#" onclick="updateJobStatus({{ job.id }}, 'in_progress')">Set In Progress</a></li>
+                                    <li><a class="dropdown-item" href="#" onclick="updateJobStatus({{ job.id }}, 'completed')">Set Completed</a></li>
+                                    <li><hr class="dropdown-divider"></li>
+                                    <li><a class="dropdown-item" href="#" data-bs-toggle="modal" data-bs-target="#invoiceModal" data-job-id="{{ job.id }}" data-customer-name="{{ job.customer_name }}">Generate Invoice</a></li>
+                                </ul>
+                            </div>
+                        </td>
+                    </tr>
+                    {% else %}
+                    <tr><td colspan="7" class="text-center text-muted">No jobs scheduled for today.</td></tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block modals %}
+<div class="modal fade" id="invoiceModal" tabindex="-1">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="invoiceModalTitle">Generate Invoice</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <form id="invoiceForm">
+                    <input type="hidden" id="invoiceJobId" name="job_id">
+                    <div class="mb-3">
+                        <label for="laborHours" class="form-label">Labor Hours</label>
+                        <input type="number" class="form-control" id="laborHours" value="2" step="0.5">
+                    </div>
+                    <h6>Parts Used</h6>
+                    <div id="parts-container">
+                        </div>
+                    <button type="button" class="btn btn-sm btn-outline-success mt-2" onclick="addPartRow()">
+                        <i class="fas fa-plus"></i> Add Part
+                    </button>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary" onclick="generateInvoice()">Generate & Save</button>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

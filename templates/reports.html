@@ -1,0 +1,42 @@
+{% extends "base.html" %}
+{% block title %}Reports - HVAC Pro{% endblock %}
+
+{% block content %}
+<div class="row mb-4">
+    <div class="col-12">
+        <h1 class="display-6"><i class="fas fa-chart-bar"></i> Business Reports</h1>
+        <p class="lead">Interactive analytics for the last 30 days.</p>
+    </div>
+</div>
+
+{% if report and report.chart_data %}
+<div class="row">
+    <div class="col-lg-8 mb-4">
+        <div class="card">
+            <div class="card-header">Revenue & Jobs Trend</div>
+            <div class="card-body">
+                <canvas id="revenueTrendChart"></canvas>
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-4 mb-4">
+        <div class="card">
+            <div class="card-header">Service Type Breakdown</div>
+            <div class="card-body">
+                <canvas id="serviceBreakdownChart"></canvas>
+            </div>
+        </div>
+    </div>
+</div>
+{% else %}
+<div class="alert alert-warning">No report data could be generated.</div>
+{% endif %}
+{% endblock %}
+
+{% block scripts %}
+<script>
+    // Pass data from Flask to JavaScript
+    const chartData = {{ report.chart_data | tojson }};
+</script>
+<script src="{{ url_for('static', filename='js/reports.js') }}"></script>
+{% endblock %}
